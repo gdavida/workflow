@@ -1,4 +1,18 @@
-$black: #000000;
+$deep-purple: #530F41;
+$gray-grape: #433159;
+$dusty-purple: #776a87;
+$cream: #fcf6f0;
+
 body {
-  background-color: $black;
+  background-color: $dusty-purple;
+  color: $cream;
+}
+
+h1 {
+  color: $gray-grape;
+}
+
+p {
+  border: 2px dotted $deep-purple;
+  padding: 10px;
 }
