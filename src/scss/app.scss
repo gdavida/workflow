@@ -12,6 +12,10 @@ h1 {
   color: $gray-grape;
 }
 
+h1:hover {
+  transition: color 1s ease;
+}
+
 p {
   border: 2px dotted $deep-purple;
   padding: 10px;

@@ -7,6 +7,10 @@ h1 {
   color: #433159;
 }
 
+h1:hover {
+  transition: color 1s ease;
+}
+
 p {
   border: 2px dotted #530F41;
   padding: 10px;

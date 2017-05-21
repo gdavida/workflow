@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
+var autoprefixer = require('gulp-autoprefixer');
 
 //point all files that exist in the src folder
 var SOURCEPATHS = {
@@ -16,8 +17,11 @@ var APPPATH ={
 
 }
 
+// sass task
 gulp.task('sass', function(){
   return gulp.src(SOURCEPATHS.sassSource)
+    .pipe(autoprefixer())
+    // can change output to compressed/nested/compact
     .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
     .pipe(gulp.dest(APPPATH.css));
 });
@@ -31,6 +35,7 @@ gulp.task('serve', ['sass'], function() {
   })
 });
 
+//watch task to automatically update browser on save
 gulp.task('watch', ['serve', 'sass'], function() {
   gulp.watch([SOURCEPATHS.sassSource], ['sass']);
 });
