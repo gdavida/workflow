@@ -3,10 +3,12 @@ var sass = require('gulp-sass');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var autoprefixer = require('gulp-autoprefixer');
+var clean = require('gulp-clean');
 
 //point all files that exist in the src folder
 var SOURCEPATHS = {
-  sassSource : 'src/scss/*.scss'
+  sassSource : 'src/scss/*.scss',
+  htmlSource: 'src/*.html'
 }
 
 // point all files that exist in the apps folder
@@ -17,6 +19,12 @@ var APPPATH ={
 
 }
 
+//read method reads the file contents, and we only need to read for the name to see if it exists, don't care about contents, then force true to remove
+gulp.task('clean-html', function() {
+  return gulp.src(APPPATH.root + '/*.html', {read: false, force: true})
+  .pipe(clean());
+});
+
 // sass task
 gulp.task('sass', function(){
   return gulp.src(SOURCEPATHS.sassSource)
@@ -24,6 +32,12 @@ gulp.task('sass', function(){
     // can change output to compressed/nested/compact
     .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
     .pipe(gulp.dest(APPPATH.css));
+});
+
+// move src (w sass and code and partials) to app for final use
+gulp.task('copy', ['clean-html'], function() {
+  gulp.src(SOURCEPATHS.htmlSource)
+    .pipe(gulp.dest(APPPATH.root))
 });
 
 // browserSync task, serve sass first
@@ -36,8 +50,9 @@ gulp.task('serve', ['sass'], function() {
 });
 
 //watch task to automatically update browser on save
-gulp.task('watch', ['serve', 'sass'], function() {
+gulp.task('watch', ['serve', 'sass', 'copy', 'clean-html'], function() {
   gulp.watch([SOURCEPATHS.sassSource], ['sass']);
+  gulp.watch([SOURCEPATHS.htmlSource], ['copy']);
 });
 
 
