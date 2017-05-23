@@ -8,7 +8,8 @@ var clean = require('gulp-clean');
 //point all files that exist in the src folder
 var SOURCEPATHS = {
   sassSource : 'src/scss/*.scss',
-  htmlSource: 'src/*.html'
+  htmlSource: 'src/*.html',
+  jsSource: 'src/js/**'
 }
 
 // point all files that exist in the apps folder
@@ -24,6 +25,10 @@ gulp.task('clean-html', function() {
   return gulp.src(APPPATH.root + '/*.html', {read: false, force: true})
   .pipe(clean());
 });
+gulp.task('clean-scripts', function() {
+  return gulp.src(APPPATH.js + '/*.js', {read: false, force: true})
+  .pipe(clean());
+});
 
 // sass task
 gulp.task('sass', function(){
@@ -33,6 +38,12 @@ gulp.task('sass', function(){
     .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
     .pipe(gulp.dest(APPPATH.css));
 });
+
+gulp.task('scripts', ['clean-scripts'], function() {
+  gulp.src(SOURCEPATHS.jsSource)
+    .pipe(gulp.dest(APPPATH.js))
+});
+
 
 // move src (w sass and code and partials) to app for final use
 gulp.task('copy', ['clean-html'], function() {
@@ -50,9 +61,10 @@ gulp.task('serve', ['sass'], function() {
 });
 
 //watch task to automatically update browser on save
-gulp.task('watch', ['serve', 'sass', 'copy', 'clean-html'], function() {
+gulp.task('watch', ['serve', 'sass', 'copy', 'clean-html', 'scripts', 'clean-scripts'], function() {
   gulp.watch([SOURCEPATHS.sassSource], ['sass']);
   gulp.watch([SOURCEPATHS.htmlSource], ['copy']);
+  gulp.watch([SOURCEPATHS.jsSource], ['scripts']);
 });
 
 
